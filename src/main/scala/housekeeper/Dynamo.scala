@@ -2,13 +2,12 @@ package housekeeper
 
 import com.amazonaws.regions.Regions
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBAsyncClient
+import com.gu.scanamo._
+import com.gu.scanamo.syntax._
 
 object Dynamo {
 
   val dyClient = AmazonDynamoDBAsyncClient.asyncBuilder().withRegion(Regions.EU_WEST_1).build()
-
-  import com.gu.scanamo._
-  import com.gu.scanamo.syntax._
 
   case class Alert(
     email: String,

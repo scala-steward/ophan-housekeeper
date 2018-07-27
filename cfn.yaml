@@ -1,0 +1,71 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Housekeeping for Ophan
+Parameters:
+  App:
+    Description: Application name
+    Type: String
+    Default: housekeeper
+Resources:
+  ExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Path: /
+      Policies:
+        - PolicyName: logs
+          PolicyDocument:
+            Statement:
+              Effect: Allow
+              Action:
+                - logs:CreateLogGroup
+                - logs:CreateLogStream
+                - logs:PutLogEvents
+              Resource: arn:aws:logs:*:*:*
+        - PolicyName: lambda
+          PolicyDocument:
+            Statement:
+              Effect: Allow
+              Action:
+                - lambda:InvokeFunction
+              Resource: "*"
+            Statement:
+              Effect: Allow
+              Action: ["dynamodb:*"]
+              Resource:
+                - "arn:aws:dynamodb:eu-west-1:021353022223:table/ophan-alerts"
+                - "arn:aws:dynamodb:eu-west-1:021353022223:table/DEV-ophan-alerts"
+  BounceSNSTopic:
+    Type: "AWS::SNS::Topic"
+    DependsOn: Lambda
+    Properties:
+      DisplayName: Housekeeping SNS topic to alert when AWS SES emails bounce from Ophan Dashboard alerts
+      Subscription:
+        - Protocol: lambda
+          Endpoint: !GetAtt Lambda.Arn
+      TopicName: ses-email-bounce-notifications-for-housekeeper
+  Lambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: ophan-dist
+        S3Key: ophan/PROD/housekeeper/housekeeper.jar
+      Description: Housekeeping for Ophan
+      Handler: housekeeper.Lambda::handler
+      MemorySize: 256
+      Role: !GetAtt ExecutionRole.Arn
+      Runtime: java8
+      Timeout: 30
+  LambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      Principal: sns.amazonaws.com
+      SourceArn:
+        Ref: BounceSNSTopic
+      FunctionName: !GetAtt Lambda.Arn

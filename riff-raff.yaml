@@ -1,0 +1,14 @@
+stacks:
+- ophan
+deployments:
+  housekeeper:
+    parameters:
+      bucket: ophan-dist
+      fileName: housekeeper.jar
+      functions:
+        PROD:
+          filename: housekeeper.jar
+          name: Ophan-Housekeeper-Lambda-KBZN4AWWA0W7
+    type: aws-lambda
+regions:
+- eu-west-1

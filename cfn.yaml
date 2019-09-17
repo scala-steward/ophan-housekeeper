@@ -57,7 +57,7 @@ Resources:
         S3Key: ophan/PROD/housekeeper/housekeeper.jar
       Description: Housekeeping for Ophan
       Handler: housekeeper.Lambda::handler
-      MemorySize: 256
+      MemorySize: 512
       Role: !GetAtt ExecutionRole.Arn
       Runtime: java8
       Timeout: 30

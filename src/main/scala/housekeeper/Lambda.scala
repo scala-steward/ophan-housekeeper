@@ -2,54 +2,46 @@ package housekeeper
 
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.events.SNSEvent
-import play.api.libs.json.{ JsString, JsValue, Json, JsonValidationError }
+import play.api.libs.json.{JsError, JsSuccess, Json}
 
 import scala.collection.JavaConverters._
-import scala.util.{ Failure, Success, Try }
+import scala.collection.JavaConverters._
 
-sealed trait BounceType
-case class PermanentBounce(json: JsValue) extends BounceType
-case class TransientBounce(json: JsValue) extends BounceType
+object Lambda extends Logging {
 
-object Lambda {
+  private val alertDeletion = new AlertDeletion(Dynamo.scanamo, "ophan-alerts")
 
-  def removeSpeechmarks(email: JsValue): String = email.toString.replaceAll("\"", "")
+  def handleBounce(bounceNotification: BounceNotification): Unit = {
+    val bounce = bounceNotification.bounce
 
-  def getBounceType(json: JsValue): Either[JsonValidationError, BounceType] = {
+    val bouncedAddresses = bounce.bouncedEmailAddresses.toSeq.sorted
 
-    (json \ "bounce" \ "bounceType").toEither match {
-      case Right(v) => Right(if (v == JsString("Permanent")) PermanentBounce(json) else TransientBounce(json))
-      case Left(err) => Left(err)
+    logger.info(Map(
+      "bounce.type" -> bounce.bounceType,
+      "bounce.permanent" -> bounce.isPermanent,
+      "bounce.mail.source" -> bounceNotification.mail.source,
+      "bounce.bouncedEmailAddresses" -> bouncedAddresses.asJava
+    ), s"${bounceNotification.mail.source} sent a ${bounce.bounceType} bounced message to ${bouncedAddresses.mkString(",")}")
+
+    if (bounce.isPermanent) {
+      bouncedAddresses.foreach(alertDeletion.deleteAllAlertsForEmailAddress)
     }
-  }
-
-  def handleBounce(bounce: BounceType): Unit = bounce match {
-    case PermanentBounce(json) => {
-      println(s"Got PERMANENT bounce:\n $json\n; going to delete the entry in dynamo")
-
-      val expiredEmail = (json \ "mail" \ "destination").as[List[JsValue]]
-      expiredEmail foreach { email =>
-        val cleanEmail = removeSpeechmarks(email)
-        println(s"Searching entries for email $cleanEmail")
-        Dynamo.deleteAlert(cleanEmail)
-      }
-    }
-    case TransientBounce(_) => println(s"Got TRANSIENT bounce; nothing to do yet")
   }
 
   /*
    * Logic handler
    */
   def go(message: String): Unit = {
+    logger.info(Map(
+      "notification.message" -> message
+    ), s"Running with notification message")
 
-    Try(Json.parse(message)) match {
-      case Success(validJson) => {
-        getBounceType(validJson) match {
-          case Left(err) => println(s"$err")
-          case Right(bounce) => handleBounce(bounce)
-        }
+    Json.parse(message).validate[BounceNotification] match {
+      case JsSuccess(bounceNotification, _) => {
+        handleBounce(bounceNotification)
       }
-      case Failure(fail) => println(s"$fail")
+      case fail: JsError  =>
+        logger.error(Map("notification.message" -> message),"Couldn't parse message as BounceNotification",fail)
     }
   }
 
@@ -59,5 +51,6 @@ object Lambda {
   def handler(lambdaInput: SNSEvent, context: Context): Unit = {
     lambdaInput.getRecords.asScala.map(_.getSNS.getMessage).toList.headOption foreach go
   }
+
 }
 

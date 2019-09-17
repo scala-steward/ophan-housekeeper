@@ -1,0 +1,68 @@
+{
+  "notificationType":"Bounce",
+  "bounce":{
+    "bounceType":"Transient",
+    "bounceSubType":"General",
+    "bouncedRecipients":[
+      {
+        "emailAddress":"firstName1.lastName1@guardian.co.uk"
+      }
+    ],
+    "timestamp":"2019-08-05T17:35:03.000Z",
+    "feedbackId":"0102016c62d951e3-21f8d661-a7e8-4a97-b7a9-456a6867de3a-000000"
+  },
+  "mail":{
+    "timestamp":"2019-08-05T17:35:05.246Z",
+    "source":"Ophan Alerts<trigr@ophan.co.uk>",
+    "sourceArn":"arn:aws:ses:eu-west-1:021353022223:identity/ophan.co.uk",
+    "sourceIp":"54.229.196.178",
+    "sendingAccountId":"021353022223",
+    "messageId":"0102016c62d9440a-b5509fba-6f21-4529-9b25-e1523fe9a7f8-000000",
+    "destination":[
+      "firstName1.lastName1@guardian.co.uk"
+    ],
+    "headersTruncated":false,
+    "headers":[
+      {
+        "name":"From",
+        "value":"Ophan Alerts <trigr@ophan.co.uk>"
+      },
+      {
+        "name":"Reply-To",
+        "value":"ophan@theguardian.com"
+      },
+      {
+        "name":"To",
+        "value":"firstName1.lastName1@guardian.co.uk"
+      },
+      {
+        "name":"Subject",
+        "value":"📉 US news commission alert for 'Woman says she was permanently disfigured by Portland police at protest'"
+      },
+      {
+        "name":"MIME-Version",
+        "value":"1.0"
+      },
+      {
+        "name":"Content-Type",
+        "value":"text/html; charset=UTF-8"
+      },
+      {
+        "name":"Content-Transfer-Encoding",
+        "value":"quoted-printable"
+      }
+    ],
+    "commonHeaders":{
+      "from":[
+        "Ophan Alerts <trigr@ophan.co.uk>"
+      ],
+      "replyTo":[
+        "ophan@theguardian.com"
+      ],
+      "to":[
+        "firstName1.lastName1@guardian.co.uk"
+      ],
+      "subject":"📉 US news commission alert for 'Woman says she was permanently disfigured by Portland police at protest'"
+    }
+  }
+}

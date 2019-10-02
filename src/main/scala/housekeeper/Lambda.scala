@@ -5,7 +5,6 @@ import com.amazonaws.services.lambda.runtime.events.SNSEvent
 import play.api.libs.json.{JsError, JsSuccess, Json}
 
 import scala.collection.JavaConverters._
-import scala.collection.JavaConverters._
 
 object Lambda extends Logging {
 
@@ -18,6 +17,7 @@ object Lambda extends Logging {
 
     logger.info(Map(
       "bounce.type" -> bounce.bounceType,
+      "bounce.subtype" -> bounce.bounceSubType,
       "bounce.permanent" -> bounce.isPermanent,
       "bounce.mail.source" -> bounceNotification.mail.source,
       "bounce.bouncedEmailAddresses" -> bouncedAddresses.asJava

@@ -1,0 +1,70 @@
+{
+  "notificationType":"Bounce",
+  "bounce":{
+    "bounceType":"Permanent",
+    "bounceSubType":"Suppressed",
+    "bouncedRecipients":[
+      {
+        "emailAddress":"somethingLikeTargetedEx@theguardian.com",
+        "action":"failed",
+        "status":"5.1.1",
+        "diagnosticCode":"Amazon SES has suppressed sending to this address because it has a recent history of bouncing as an invalid address. For more information about how to remove an address from the suppression list, see the Amazon SES Developer Guide: http://docs.aws.amazon.com/ses/latest/DeveloperGuide/remove-from-suppressionlist.html "
+      }
+    ],
+    "timestamp":"2019-09-19T04:23:37.600Z",
+    "feedbackId":"0102016d47c2e354-5c962eff-959a-4612-855c-5eb0a0cfafb6-000000",
+    "reportingMTA":"dns; amazonses.com"
+  },
+  "mail":{
+    "timestamp":"2019-09-19T04:23:37.000Z",
+    "source":"somethingLikesomethingLikeAirflow@ophan.co.uk",
+    "sourceArn":"arn:aws:ses:eu-west-1:021353022223:identity/ophan.co.uk",
+    "sourceIp":"34.241.88.120",
+    "sendingAccountId":"021353022223",
+    "messageId":"0102016d47c2e2a3-ca6e1d29-59eb-45b4-a9f4-bc4637f0feea-000000",
+    "destination":[
+      "somethingLikeTargetedEx@theguardian.com"
+    ],
+    "headersTruncated":false,
+    "headers":[
+      {
+        "name":"Received",
+        "value":"from ip-10-248-181-54.eu-west-1.compute.internal (ec2-34-241-88-120.eu-west-1.compute.amazonaws.com [34.241.88.120]) by email-smtp.amazonaws.com with SMTP (SimpleEmailService-d-BP0H6U6KO) id yDp5RekzpMsc3pDXk0S6 for somethingLikeTargetedEx@theguardian.com; Thu, 19 Sep 2019 04:23:37 +0000 (UTC)"
+      },
+      {
+        "name":"Content-Type",
+        "value":"multipart/mixed; boundary=\"===============5183482680977099050==\""
+      },
+      {
+        "name":"MIME-Version",
+        "value":"1.0"
+      },
+      {
+        "name":"Subject",
+        "value":"Airflow alert: <TaskInstance: tx-standalone-jobs.marketing-email-sends-1 2019-09-18T00:00:00+00:00 [failed]>"
+      },
+      {
+        "name":"From",
+        "value":"somethingLikeAirflow@ophan.co.uk"
+      },
+      {
+        "name":"To",
+        "value":"somethingLikeTargetedEx@theguardian.com"
+      },
+      {
+        "name":"Date",
+        "value":"Thu, 19 Sep 2019 04:23:37 +0000"
+      }
+    ],
+    "commonHeaders":{
+      "from":[
+        "somethingLikeAirflow@ophan.co.uk"
+      ],
+      "date":"Thu, 19 Sep 2019 04:23:37 +0000",
+      "to":[
+        "somethingLikeTargetedEx@theguardian.com"
+      ],
+      "subject":"Airflow alert: <TaskInstance: 2019-09-18T00:00:00+00:00 [failed]>"
+    }
+  }
+}

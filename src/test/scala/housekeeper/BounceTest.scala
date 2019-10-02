@@ -30,5 +30,12 @@ class BounceTest extends FlatSpec with Matchers with Inside {
     notification.mail.source shouldBe "somethingLikeAirflow@ophan.co.uk"
   }
 
+  it should "recognise if a permanent bounce was because the address was on the AWS SES suppression list, ie for a history of hard bounces" in {
+    val notification = bounceNotificationFrom("notificationMessages/permanentBounce.subtype-suppressed.json")
+
+    notification.bounce.isPermanent shouldBe true
+    notification.bounce.isOnSuppressionList shouldBe true
+  }
+
   def bounceNotificationFrom(resource: String) = Json.parse(fromResource(resource).mkString).as[BounceNotification]
 }

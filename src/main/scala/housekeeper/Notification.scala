@@ -8,10 +8,12 @@ case class BounceNotification(bounce: Bounce, mail: Mail)
 object BounceNotification {
 
   case class BouncedRecipient(emailAddress: String)
-  case class Bounce(bounceType: String, bouncedRecipients: Seq[BouncedRecipient]) {
+  case class Bounce(bounceType: String, bounceSubType: String, bouncedRecipients: Seq[BouncedRecipient]) {
     val bouncedEmailAddresses = bouncedRecipients.map(_.emailAddress).toSet
 
     val isPermanent = bounceType.equalsIgnoreCase("permanent")
+
+    val isOnSuppressionList = bounceSubType.equalsIgnoreCase("suppressed")
   }
 
   case class CommonHeaders(subject: String)

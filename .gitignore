@@ -3,6 +3,8 @@ target/
 project/boot
 logs/
 
+dynamodb-local/
+
 .history
 .DS_Store
 *~

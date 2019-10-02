@@ -1,0 +1,73 @@
+{
+  "notificationType":"Bounce",
+  "bounce":{
+    "bounceType":"Permanent",
+    "bounceSubType":"General",
+    "bouncedRecipients":[
+      {
+        "emailAddress":"firstName1.lastName1@guardian.co.uk",
+        "action":"failed",
+        "status":"5.1.1",
+        "diagnosticCode":"smtp; 550-5.1.1 The email account that you tried to reach does not exist. Please try\n550-5.1.1 double-checking the recipient's email address for typos or\n550-5.1.1 unnecessary spaces. Learn more at\n550 5.1.1  https://support.google.com/mail/?p=NoSuchUser z3si1531489edm.238 - gsmtp"
+      }
+    ],
+    "timestamp":"2018-12-14T12:00:00.000Z",
+    "feedbackId":"01020167acccb997-0ea58469-9ec6-4b3c-aedd-a69ace97d252-000000",
+    "remoteMtaIp":"74.125.193.27",
+    "reportingMTA":"dsn; a7-36.smtp-out.eu-west-1.amazonses.com"
+  },
+  "mail":{
+    "timestamp":"2018-12-14T12:59:16.000Z",
+    "source":"Ophan Alerts<somethingLikeTrigr@ophan.co.uk>",
+    "sourceArn":"arn:aws:ses:eu-west-1:123456789012:identity/ophan.co.uk",
+    "sourceIp":"34.241.205.96",
+    "sendingAccountId":"123456789012",
+    "messageId":"01020167acccb7b4-e1efb8f8-81c5-40f7-802c-928d48812985-000000",
+    "destination":[
+      "firstName1.lastName1@guardian.co.uk"
+    ],
+    "headersTruncated":false,
+    "headers":[
+      {
+        "name":"From",
+        "value":"Ophan Alerts <somethingLikeTrigr@ophan.co.uk>"
+      },
+      {
+        "name":"Reply-To",
+        "value":"somethingLikeOphan@theguardian.com"
+      },
+      {
+        "name":"To",
+        "value":"firstName1.lastName1@guardian.co.uk"
+      },
+      {
+        "name":"Subject",
+        "value":"Tech story needs help! alert for 'Building a video game industry from scratch: Chips with Everything podcast'"
+      },
+      {
+        "name":"MIME-Version",
+        "value":"1.0"
+      },
+      {
+        "name":"Content-Type",
+        "value":"text/html; charset=UTF-8"
+      },
+      {
+        "name":"Content-Transfer-Encoding",
+        "value":"quoted-printable"
+      }
+    ],
+    "commonHeaders":{
+      "from":[
+        "Ophan Alerts <somethingLikeTrigr@ophan.co.uk>"
+      ],
+      "replyTo":[
+        "somethingLikeOphan@theguardian.com"
+      ],
+      "to":[
+        "firstName1.lastName1@guardian.co.uk"
+      ],
+      "subject":"Tech story needs help! alert for 'Building a video game industry from scratch: Chips with Everything podcast'"
+    }
+  }
+}

@@ -1,8 +1,6 @@
 package housekeeper
 
 import cats.implicits._
-import com.amazonaws.regions.Regions.EU_WEST_1
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBAsyncClient
 import housekeeper.Dynamo.OphanAlert
 import org.scanamo._
 import org.scanamo.syntax._
@@ -10,7 +8,7 @@ import org.scanamo.auto._
 
 object Dynamo extends Logging {
 
-  val scanamo = Scanamo(AmazonDynamoDBAsyncClient.asyncBuilder().withRegion(EU_WEST_1).build())
+  val scanamo = Scanamo(AWS.Dynamo)
 
   case class OphanAlert(
                          email: String,

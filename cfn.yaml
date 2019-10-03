@@ -8,6 +8,7 @@ Parameters:
 Resources:
   ExecutionRole:
     Type: AWS::IAM::Role
+    DependsOn: PermanentEmailBounceTopic
     Properties:
       AssumeRolePolicyDocument:
         Statement:
@@ -40,22 +41,37 @@ Resources:
               Resource:
                 - "arn:aws:dynamodb:eu-west-1:021353022223:table/ophan-alerts"
                 - "arn:aws:dynamodb:eu-west-1:021353022223:table/DEV-ophan-alerts"
+            Statement:
+              Effect: Allow
+              Action:
+                - sns:Publish
+              Resource: !Ref PermanentEmailBounceTopic
   BounceSNSTopic:
     Type: "AWS::SNS::Topic"
     DependsOn: Lambda
     Properties:
-      DisplayName: Housekeeping SNS topic to alert when AWS SES emails bounce from Ophan Dashboard alerts
+      DisplayName: SNS topic alerted when AWS SES emails bounce (eg from Ophan Dashboard alerts, or Airflow)
       Subscription:
         - Protocol: lambda
           Endpoint: !GetAtt Lambda.Arn
       TopicName: ses-email-bounce-notifications-for-housekeeper
+
+  PermanentEmailBounceTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: Threat to email-sending ability of Ophan's AWS account
+
   Lambda:
     Type: AWS::Lambda::Function
+    DependsOn: PermanentEmailBounceTopic
     Properties:
       Code:
         S3Bucket: ophan-dist
         S3Key: ophan/PROD/housekeeper/housekeeper.jar
       Description: Housekeeping for Ophan
+      Environment:
+        Variables:
+          PermanentEmailBounceTopicArn: !Ref PermanentEmailBounceTopic
       Handler: housekeeper.Lambda::handler
       MemorySize: 512
       Role: !GetAtt ExecutionRole.Arn

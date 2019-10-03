@@ -2,6 +2,7 @@ package housekeeper
 
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.events.SNSEvent
+import com.amazonaws.services.sns.model.PublishRequest
 import play.api.libs.json.{JsError, JsSuccess, Json}
 
 import scala.collection.JavaConverters._
@@ -15,16 +16,23 @@ object Lambda extends Logging {
 
     val bouncedAddresses = bounce.bouncedEmailAddresses.toSeq.sorted
 
+    val senderOfBouncedEmail = bounceNotification.mail.source
+    val bounceSummary = s"$senderOfBouncedEmail sent a ${bounce.bounceType} bounced message to ${bouncedAddresses.mkString(",")}"
     logger.info(Map(
       "bounce.type" -> bounce.bounceType,
       "bounce.subtype" -> bounce.bounceSubType,
       "bounce.permanent" -> bounce.isPermanent,
-      "bounce.mail.source" -> bounceNotification.mail.source,
+      "bounce.mail.source" -> senderOfBouncedEmail,
       "bounce.bouncedEmailAddresses" -> bouncedAddresses.asJava
-    ), s"${bounceNotification.mail.source} sent a ${bounce.bounceType} bounced message to ${bouncedAddresses.mkString(",")}")
+    ), bounceSummary)
 
     if (bounce.isPermanent) {
       bouncedAddresses.foreach(alertDeletion.deleteAllAlertsForEmailAddress)
+      if (bounce.isOnSuppressionList) {
+        val arn = sys.env("PermanentEmailBounceTopicArn")
+        logger.info(s"Sending an SNS alert to $arn")
+        AWS.SNS.publishAsync(new PublishRequest(arn, bounceSummary))
+      }
     }
   }
 

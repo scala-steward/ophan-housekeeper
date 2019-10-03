@@ -22,7 +22,8 @@ libraryDependencies ++= Seq(
   "org.slf4j" % "log4j-over-slf4j" % "1.7.28", //  log4j-over-slf4j provides `org.apache.log4j.MDC`, which is dynamically loaded by the Lambda runtime
   "ch.qos.logback" % "logback-classic" % "1.2.3",
 
-  "com.amazonaws" % "aws-java-sdk-dynamodb" % "1.11.632",
+  "com.amazonaws" % "aws-java-sdk-dynamodb" % "1.11.642",
+  "com.amazonaws" % "aws-java-sdk-sns" % "1.11.642",
   "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.9.3", // So many Snyk warnings
   "com.typesafe.play" %% "play-json" % "2.7.4",
   "org.scanamo" %% "scanamo" % "1.0.0-M11",

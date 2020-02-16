@@ -1,14 +1,14 @@
 package housekeeper
 
-import com.amazonaws.auth.{AWSCredentialsProviderChain, EC2ContainerCredentialsProviderWrapper}
 import com.amazonaws.auth.profile.ProfileCredentialsProvider
+import com.amazonaws.auth.{AWSCredentialsProviderChain, EnvironmentVariableCredentialsProvider}
 import com.amazonaws.regions.Regions.EU_WEST_1
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBAsyncClient
 import com.amazonaws.services.sns.AmazonSNSAsyncClient
 
 object AWS {
   val credentials = new AWSCredentialsProviderChain(
-    new EC2ContainerCredentialsProviderWrapper,
+    new EnvironmentVariableCredentialsProvider,
     new ProfileCredentialsProvider("ophan")
   )
 

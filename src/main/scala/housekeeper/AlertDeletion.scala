@@ -33,7 +33,7 @@ class AlertDeletion(scanamo: Scanamo, tableName: String) extends Logging {
       ), s"About to delete ${alertsForEmail.size} alerts for '$email'")
       deletionResults <- alertsForEmail.traverse(alert => table.delete(alert.primaryKey))
     } yield {
-      logger.info(baseContext, s"...successfully deleted ${alertsForEmail.size} alerts for '$email'}")
+      logger.info(baseContext, s"...successfully deleted ${alertsForEmail.size} alerts for '$email'")
     })
   }
 

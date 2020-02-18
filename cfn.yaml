@@ -19,7 +19,7 @@ Resources:
             Action: sts:AssumeRole
       Path: /
       Policies:
-        - PolicyName: logs
+        - PolicyName: logging
           PolicyDocument:
             Statement:
               Effect: Allow
@@ -28,21 +28,17 @@ Resources:
                 - logs:CreateLogStream
                 - logs:PutLogEvents
               Resource: arn:aws:logs:*:*:*
-        - PolicyName: lambda
+        - PolicyName: housekeeping-actions
           PolicyDocument:
             Statement:
-              Effect: Allow
+            - Effect: Allow
               Action:
-                - lambda:InvokeFunction
-              Resource: "*"
-            Statement:
-              Effect: Allow
-              Action: ["dynamodb:*"]
+                - "dynamodb:Query"
+                - "dynamodb:DeleteItem"
               Resource:
-                - "arn:aws:dynamodb:eu-west-1:021353022223:table/ophan-alerts"
-                - "arn:aws:dynamodb:eu-west-1:021353022223:table/DEV-ophan-alerts"
-            Statement:
-              Effect: Allow
+                - "arn:aws:dynamodb:*:021353022223:table/ophan-alerts"
+                - "arn:aws:dynamodb:*:021353022223:table/DEV-ophan-alerts"
+            - Effect: Allow
               Action:
                 - sns:Publish
               Resource: !Ref PermanentEmailBounceTopic

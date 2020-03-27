@@ -5,7 +5,7 @@ import com.amazonaws.services.lambda.runtime.events.SNSEvent
 import com.amazonaws.services.sns.model.PublishRequest
 import play.api.libs.json.{JsError, JsSuccess, Json}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 object Lambda extends Logging {
 

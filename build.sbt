@@ -6,7 +6,7 @@ description:= "Housekeeping for Ophan"
 
 version := "1.0"
 
-scalaVersion := "2.12.10"
+scalaVersion := "2.13.1"
 
 scalacOptions ++= Seq(
   "-deprecation",

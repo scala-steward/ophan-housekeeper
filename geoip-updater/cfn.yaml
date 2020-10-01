@@ -36,7 +36,7 @@ Resources:
         S3Bucket: ophan-dist
         S3Key: ophan/PROD/housekeeper/geoip-updater.jar
       Description: A lambda that uses the GeoIPUpdater to download an updated dump of GeoIP data and place it in a specified S3 bucket
-      Handler: com.gu.ophan.housekeeper.Lambda::handler
+      Handler: com.gu.ophan.geoipupdater.Lambda::handler
       MemorySize: 512
       Role: !GetAtt ExecutionRole.Arn
       Runtime: java8

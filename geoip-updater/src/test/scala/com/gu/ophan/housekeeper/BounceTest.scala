@@ -10,3 +10,4 @@ class BounceTest extends FlatSpec with Matchers with Inside {
   it should "test some stuff" in {
     true
   }
+}

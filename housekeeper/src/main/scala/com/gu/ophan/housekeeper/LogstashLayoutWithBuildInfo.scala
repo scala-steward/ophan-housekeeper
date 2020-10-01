@@ -1,4 +1,4 @@
-package com.gu.ophan.housekeeper
+package housekeeper
 
 import ch.qos.logback.classic.spi.ILoggingEvent
 import com.amazonaws.services.lambda.runtime.LambdaRuntimeInternal

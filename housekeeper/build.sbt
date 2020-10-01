@@ -57,7 +57,6 @@ inConfig(Test)(Seq(
   testOptions += dynamoDBLocalTestCleanup.value
 ))
 
-
 buildInfoPackage := "housekeeper"
 buildInfoKeys := Seq[BuildInfoKey](
   BuildInfoKey.constant("buildNumber", Option(System.getenv("BUILD_NUMBER")) getOrElse "DEV"),

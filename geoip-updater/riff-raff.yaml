@@ -1,0 +1,14 @@
+stacks:
+- ophan
+deployments:
+  housekeeper:
+    parameters:
+      bucket: ophan-dist
+      fileName: geoip-updater.jar
+      functions:
+        PROD:
+          filename: geoip-updater.jar
+          name: Ophan-Housekeeper-Lambda-KBZN4AWWA0W7
+    type: aws-lambda
+regions:
+- eu-west-1

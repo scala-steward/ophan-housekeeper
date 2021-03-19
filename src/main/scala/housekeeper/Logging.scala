@@ -1,10 +1,10 @@
 package housekeeper
 
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import net.logstash.logback.marker.LogstashMarker
 import net.logstash.logback.marker.Markers.appendEntries
-import scala.collection.JavaConverters._
+import org.slf4j.{Logger, LoggerFactory}
+
+import scala.jdk.CollectionConverters._
 
 trait Logging {
 

@@ -71,7 +71,7 @@ Resources:
       Handler: housekeeper.Lambda::handler
       MemorySize: 512
       Role: !GetAtt ExecutionRole.Arn
-      Runtime: java8
+      Runtime: java11
       Timeout: 30
   LambdaInvokePermission:
     Type: AWS::Lambda::Permission

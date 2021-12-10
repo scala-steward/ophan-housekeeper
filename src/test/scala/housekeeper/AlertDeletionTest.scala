@@ -2,12 +2,13 @@ package housekeeper
 
 import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType._
 import housekeeper.Dynamo.OphanAlert
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 import org.scanamo.{LocalDynamoDB, Scanamo}
 
 import scala.util.Random
 
-class AlertDeletionTest extends FlatSpec with Matchers {
+class AlertDeletionTest extends AnyFlatSpec with Matchers {
 
   lazy val client = LocalDynamoDB.client()
 

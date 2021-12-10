@@ -1,11 +1,13 @@
 package housekeeper
 
-import org.scalatest.{FlatSpec, Inside, Matchers}
+import org.scalatest.Inside
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 import play.api.libs.json.Json
 
 import scala.io.Source.fromResource
 
-class BounceTest extends FlatSpec with Matchers with Inside {
+class BounceTest extends AnyFlatSpec with Matchers with Inside {
 
   it should "recognise a *permanent* bounce notification for an Ophan alert sent to a dead email address" in {
     val notification = bounceNotificationFrom("notificationMessages/permanentBounce.ophanAlert.json")

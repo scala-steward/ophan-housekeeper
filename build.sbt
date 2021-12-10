@@ -6,7 +6,7 @@ description:= "Housekeeping for Ophan"
 
 version := "1.0"
 
-scalaVersion := "2.13.5"
+scalaVersion := "2.13.7"
 
 scalacOptions ++= Seq(
   "-deprecation",
@@ -15,21 +15,22 @@ scalacOptions ++= Seq(
   "-Ywarn-dead-code"
 )
 
+val awsSdkVersion = "1.12.122"
+
 libraryDependencies ++= Seq(
-  "com.amazonaws" % "aws-lambda-java-core" % "1.2.0",
-  "com.amazonaws" % "aws-lambda-java-events" % "2.2.7",
-  "net.logstash.logback" % "logstash-logback-encoder" % "6.2",
-  "org.slf4j" % "log4j-over-slf4j" % "1.7.28", //  log4j-over-slf4j provides `org.apache.log4j.MDC`, which is dynamically loaded by the Lambda runtime
-  "ch.qos.logback" % "logback-classic" % "1.2.3",
+  "com.amazonaws" % "aws-lambda-java-core" % "1.2.1",
+  "com.amazonaws" % "aws-lambda-java-events" % "3.11.0",
+  "net.logstash.logback" % "logstash-logback-encoder" % "7.0.1",
+  "org.slf4j" % "log4j-over-slf4j" % "1.7.32", //  log4j-over-slf4j provides `org.apache.log4j.MDC`, which is dynamically loaded by the Lambda runtime
+  "ch.qos.logback" % "logback-classic" % "1.2.7",
 
-  "com.amazonaws" % "aws-java-sdk-dynamodb" % "1.11.642",
-  "com.amazonaws" % "aws-java-sdk-sns" % "1.11.642",
+  "com.amazonaws" % "aws-java-sdk-dynamodb" % awsSdkVersion,
+  "com.amazonaws" % "aws-java-sdk-sns" % awsSdkVersion,
   "com.fasterxml.jackson.core" % "jackson-databind" % "2.10.5.1", // So many Snyk warnings
-  "com.typesafe.play" %% "play-json" % "2.7.4",
+  "com.typesafe.play" %% "play-json" % "2.9.2",
   "org.scanamo" %% "scanamo" % "1.0.0-M11",
-  "org.scanamo" %% "scanamo-testkit" % "1.0.0-M11" % "test",
-
-  "org.scalatest" %% "scalatest" % "3.0.8" % "test"
+  "org.scanamo" %% "scanamo-testkit" % "1.0.0-M11" % Test,
+  "org.scalatest" %% "scalatest" % "3.2.9" % Test
 )
 
 enablePlugins(RiffRaffArtifact, BuildInfoPlugin)
@@ -40,30 +41,29 @@ riffRaffUploadArtifactBucket := Option("riffraff-artifact")
 riffRaffUploadManifestBucket := Option("riffraff-builds")
 riffRaffArtifactResources += (file("cfn.yaml"), s"${name.value}-cfn/cfn.yaml")
 
-assemblyMergeStrategy in assembly := {
+assembly / assemblyMergeStrategy := {
   case PathList("META-INF", xs @ _*) => MergeStrategy.discard
-  case x => MergeStrategy.first
+  case _ => MergeStrategy.first
 }
 
-
-startDynamoDBLocal := startDynamoDBLocal.dependsOn(compile in Test).value
+startDynamoDBLocal := startDynamoDBLocal.dependsOn(Test / compile).value
 
 dynamoDBLocalPort := 8042
 
 inConfig(Test)(Seq(
-  test := (test in Test).dependsOn(startDynamoDBLocal).value,
-  testOnly := (testOnly in Test).dependsOn(startDynamoDBLocal).evaluated,
-  testQuick := (testQuick in Test).dependsOn(startDynamoDBLocal).evaluated,
+  test := (Test / test).dependsOn(startDynamoDBLocal).value,
+  testOnly := (Test / testOnly).dependsOn(startDynamoDBLocal).evaluated,
+  testQuick := (Test / testQuick).dependsOn(startDynamoDBLocal).evaluated,
   testOptions += dynamoDBLocalTestCleanup.value
 ))
 
 
 buildInfoPackage := "housekeeper"
 buildInfoKeys := Seq[BuildInfoKey](
-  BuildInfoKey.constant("buildNumber", Option(System.getenv("BUILD_NUMBER")) getOrElse "DEV"),
+  "buildNumber" -> Option(System.getenv("BUILD_NUMBER")).getOrElse("DEV"),
   // so this next one is constant to avoid it always recompiling on dev machines.
   // we only really care about build time on teamcity, when a constant based on when
   // it was loaded is just fine
-  BuildInfoKey.constant("buildTime", System.currentTimeMillis),
-  BuildInfoKey.constant("gitCommitId", Option(System.getenv("BUILD_VCS_NUMBER")) getOrElse "DEV")
+  "buildTime" -> System.currentTimeMillis,
+  "gitCommitId"-> Option(System.getenv("BUILD_VCS_NUMBER")).getOrElse("DEV")
 )

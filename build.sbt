@@ -59,11 +59,11 @@ inConfig(Test)(Seq(
 
 
 buildInfoPackage := "housekeeper"
-buildInfoKeys := Seq[BuildInfoKey](
-  "buildNumber" -> Option(System.getenv("BUILD_NUMBER")).getOrElse("DEV"),
-  // so this next one is constant to avoid it always recompiling on dev machines.
-  // we only really care about build time on teamcity, when a constant based on when
-  // it was loaded is just fine
-  "buildTime" -> System.currentTimeMillis,
-  "gitCommitId"-> Option(System.getenv("BUILD_VCS_NUMBER")).getOrElse("DEV")
-)
+buildInfoKeys := {
+  val buildInfo = com.gu.riffraff.artifact.BuildInfo(baseDirectory.value)
+  Seq[BuildInfoKey](
+    "buildNumber" -> buildInfo.buildIdentifier,
+    "gitCommitId" -> buildInfo.revision,
+    "buildTime" -> System.currentTimeMillis
+  )
+}

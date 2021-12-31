@@ -15,14 +15,14 @@ scalacOptions ++= Seq(
   "-Ywarn-dead-code"
 )
 
-val awsSdkVersion = "1.12.122"
+val awsSdkVersion = "1.12.131"
 
 libraryDependencies ++= Seq(
   "com.amazonaws" % "aws-lambda-java-core" % "1.2.1",
   "com.amazonaws" % "aws-lambda-java-events" % "3.11.0",
   "net.logstash.logback" % "logstash-logback-encoder" % "7.0.1",
   "org.slf4j" % "log4j-over-slf4j" % "1.7.32", //  log4j-over-slf4j provides `org.apache.log4j.MDC`, which is dynamically loaded by the Lambda runtime
-  "ch.qos.logback" % "logback-classic" % "1.2.7",
+  "ch.qos.logback" % "logback-classic" % "1.2.10",
 
   "com.amazonaws" % "aws-java-sdk-dynamodb" % awsSdkVersion,
   "com.amazonaws" % "aws-java-sdk-sns" % awsSdkVersion,
@@ -59,11 +59,11 @@ inConfig(Test)(Seq(
 
 
 buildInfoPackage := "housekeeper"
-buildInfoKeys := Seq[BuildInfoKey](
-  "buildNumber" -> Option(System.getenv("BUILD_NUMBER")).getOrElse("DEV"),
-  // so this next one is constant to avoid it always recompiling on dev machines.
-  // we only really care about build time on teamcity, when a constant based on when
-  // it was loaded is just fine
-  "buildTime" -> System.currentTimeMillis,
-  "gitCommitId"-> Option(System.getenv("BUILD_VCS_NUMBER")).getOrElse("DEV")
-)
+buildInfoKeys := {
+  val buildInfo = com.gu.riffraff.artifact.BuildInfo(baseDirectory.value)
+  Seq[BuildInfoKey](
+    "buildNumber" -> buildInfo.buildIdentifier,
+    "gitCommitId" -> buildInfo.revision,
+    "buildTime" -> System.currentTimeMillis
+  )
+}
